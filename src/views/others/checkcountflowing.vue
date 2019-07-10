@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-row>
-      <el-form inline ref="flowing" :model="flowing">
+      <el-form inline ref="flowing" :model="flowing" :rules="rules">
         <el-col :span="6">
-          <el-form-item label="查询方式:">
+          <el-form-item label="查询方式:" prop="queryMode">
             <el-select v-model="flowing.queryMode" clearable @change="modechange">
               <el-option label="按照交易日期查询" value="1"></el-option>
               <el-option label="按照交易时间查询" value="2"></el-option>
