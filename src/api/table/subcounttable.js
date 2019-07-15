@@ -113,3 +113,27 @@ export function queryflowing(data) {
     data
   })
 }
+// 子账户交易明细查询
+export function querytrading(data) {
+  return fetch({
+    url: "/merchant/104090",
+    method: "post",
+    data
+  })
+}
+// 存管户当日交易明细查询
+export function daytrade(data) {
+  return fetch({
+    url: "/merchant/104100",
+    method: "post",
+    data
+  })
+}
+// 存管户历史交易明细查询
+export function historytrade(data) {
+  return fetch({
+    url: "/merchant/104110",
+    method: "post",
+    data
+  })
+}

@@ -186,7 +186,7 @@ export const asyncRoutes = [
       },
       {
         path: 'tradingdetai',
-        component: () => import('@/views/golden/checkGolden'),
+        component: () => import('@/views/others/checktradingdetail'),
         name: '子账户交易明细查询',
         meta: {
           title: '子账户交易明细查询',
@@ -195,7 +195,7 @@ export const asyncRoutes = [
       },
       {
         path: 'daytrading',
-        component: () => import('@/views/golden/checkGolden'),
+        component: () => import('@/views/others/checkdaytrade'),
         name: '存管户当日交易明细查询',
         meta: {
           title: '存管户当日交易明细查询',
@@ -204,7 +204,7 @@ export const asyncRoutes = [
       },
       {
         path: 'historytrading',
-        component: () => import('@/views/golden/checkGolden'),
+        component: () => import('@/views/others/checkhistorytrade'),
         name: '存管户历史交易明细查询',
         meta: {
           title: '存管户历史交易明细查询',
