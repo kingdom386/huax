@@ -1,10 +1,10 @@
 <template>
   <div>
-    <!-- <el-form ref="bussiness" :model="bussiness" :inline="true" label-width="80px">
+    <el-form ref="bussiness" :model="bussiness" :inline="true" label-width="80px">
       <el-row>
         <el-col :span="6">
-          <el-form-item label="币种:" prop="Currency">
-            <el-select v-model="bussiness.Currency" filterable clearable placeholder="请选择">
+          <el-form-item label="币种:" prop="currency">
+            <el-select v-model="bussiness.currency" filterable clearable placeholder="请选择">
               <el-option
                 v-for="(item, index) in options"
                 :key="index"
@@ -17,11 +17,10 @@
         <el-col :span="6">
           <el-form-item>
             <el-button type="primary" @click="checkform('bussiness')">查询</el-button>
-            <el-button type="danger" @click="resetform('bussiness')">重置</el-button>
           </el-form-item>
         </el-col>
       </el-row>
-    </el-form>-->
+    </el-form>
     <div class="tables">
       <el-table :data="businessdata" stripe border style="width: 100%">
         <el-table-column label="商户代码" prop="merchantNo" width="100px"></el-table-column>
@@ -122,8 +121,7 @@
             <span v-else></span>
           </template>
         </el-table-column>
-        <el-table-column label="结算费商户占比" prop="settleAccountRatio">
-        </el-table-column>
+        <el-table-column label="结算费商户占比" prop="settleAccountRatio"></el-table-column>
         <el-table-column label="结算费交易会员占比" prop="settleMemoRatio"></el-table-column>
         <el-table-column label="出入金账户授权标志" prop="inOutOuathSign"></el-table-column>
         <el-table-column label="子帐号" prop="subAccount"></el-table-column>
@@ -243,7 +241,7 @@ export default {
       ],
       businessdata: [],
       bussiness: {
-        Currency: ""
+        currency: "CNY"
       },
       page: {
         currentPage: 1,
@@ -254,16 +252,20 @@ export default {
     };
   },
   created() {
-    const _this = this;
-    const ls = { merchantNo: window.merchantNo, currency: "CNY" };
-    checkbusiness(ls).then(res => {
-      _this.businessdata.push(res);
-    });
+    this.initdom()
   },
   methods: {
+    initdom() {
+      const _this = this;
+      _this.businessdata = []
+      const ls = { merchantNo: window.merchantNo, currency: _this.bussiness.currency };
+      checkbusiness(ls).then(res => {
+        _this.businessdata.push(res);
+      });
+    },
     // 查询
     checkform(formName) {
-      console.log(JSON.stringify(this.subcount));
+      this.initdom()
     },
     // 重置
     resetform(formName) {

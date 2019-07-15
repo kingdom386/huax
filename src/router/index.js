@@ -200,7 +200,7 @@ export const asyncRoutes = [
           roles: ['admin']
         }
       }, {
-        path: 'tradingdetai',
+        path: 'tradingdetail',
         component: () => import ('@/views/others/checktradingdetail'),
         name: '子账户交易明细查询',
         meta: {

@@ -11,7 +11,7 @@
       </el-form>
     </el-row>
     <div class="tables">
-      <el-table :data="customedata" stripe border style="width: 100%;">
+      <el-table :data="customedata" stripe border style="width: 100%;" height="500">
         <el-table-column label="子账号" prop="subAccount" width="150"></el-table-column>
         <el-table-column label="币种" prop="currency"></el-table-column>
         <el-table-column label="交易会员名称" prop="tradeMemBerName"></el-table-column>
@@ -118,13 +118,6 @@
         <el-table-column label="授权日期" prop="ouathTimes"></el-table-column>
         <el-table-column label="备注1" prop="remark1"></el-table-column>
         <el-table-column label="备注2" prop="remark2"></el-table-column>
-        <!-- <el-table-column fixed="right" label="操作" width="160">
-          <template slot-scope="scope">
-            <el-button @click.native.prevent="deleteRow(scope.$index, customedata)" type="text">移除</el-button>
-            <el-button type="text">查看</el-button>
-            <el-button type="text">编辑</el-button>
-          </template>
-        </el-table-column>-->
       </el-table>
     </div>
     <!-- tables -->
@@ -134,17 +127,7 @@
 <script>
 import { checkcustome } from "@/api/table/subcounttable";
 import cookie from "js-cookie";
-// merchantNo: rows.merchantNo,
-// papersCode: rows.papersCode
 export default {
-  // props: {
-  //   customeinfo: {
-  //     type: Object,
-  //     default: () => {
-  //       return {};
-  //     }
-  //   }
-  // },
   data() {
     return {
       customedata: [],
@@ -167,7 +150,6 @@ export default {
         boothNo: window.merchantNo + _this.customeform.BoothNo || ""
       };
       checkcustome(ls).then(res => {
-        console.log(res);
         _this.customedata.push(res);
       });
     },

@@ -20,7 +20,7 @@
       </el-form-item>
     </el-form>
     <div class="tables">
-      <el-table :data="binddata" stripe border style="width: 100%">
+      <el-table :data="binddata" stripe border style="width: 100%" height="500">
         <el-table-column label="序号" prop="order"></el-table-column>
         <el-table-column width="140px" label="子账号" prop="subAccount"></el-table-column>
         <el-table-column width="100px" label="交易会员代码" prop="tradeMemCode"></el-table-column>
@@ -75,19 +75,8 @@
 <script>
 import { checkbindmoney } from "@/api/table/subcounttable";
 import cookie from "js-cookie";
-// merchantNo: row.merchantNo,
-// subAccount: row.subAccount,
-// tradeMemCode: row.memBerCode
 
 export default {
-  // props: {
-  //   moneyinfo: {
-  //     type: Object,
-  //     default: () => {
-  //       return {};
-  //     }
-  //   }
-  // },
   data() {
     return {
       binddata: [],
@@ -111,14 +100,6 @@ export default {
       }
     };
   },
-  // watch: {
-  //   moneyinfo(news, olds) {
-  //     this.checkRow(news);
-  //   }
-  // },
-  // mounted() {
-  //   this.checkRow(this.moneyinfo);
-  // },
   methods: {
     // 查询
     checkform(formName) {
