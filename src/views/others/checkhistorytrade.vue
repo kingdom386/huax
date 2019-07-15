@@ -76,51 +76,10 @@
       </el-row>
     </el-form>
     <el-table :data="historydata">
-      <el-table-column label="序号" prop="order"></el-table-column>
-      <el-table-column width="150px" label="子账号" prop="subAccount"></el-table-column>
-      <el-table-column width="130px" label="支付单号" prop="payCode"></el-table-column>
-      <el-table-column label="交易码" prop="transCode"></el-table-column>
-      <el-table-column width="140px" label="付款账号" prop="payAcc"></el-table-column>
-      <el-table-column label="付款账户名称" prop="payAccName"></el-table-column>
-      <el-table-column label="付款方开户行名称" prop="payOpenBank"></el-table-column>
-      <el-table-column label="收款账号" prop="revAcc"></el-table-column>
-      <el-table-column label="收款账户名称" prop="revAccName"></el-table-column>
-      <el-table-column label="收款方开户行名称" prop="revOpenBank"></el-table-column>
-      <el-table-column label="交易额" prop="totalAmt"></el-table-column>
-      <el-table-column label="发生额" prop="creMoney"></el-table-column>
-      <el-table-column label="交易类型">
-        <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.appType === '1'">入金</el-tag>
-          <el-tag type="primary" v-else-if="scope.row.appType === '2'">出金</el-tag>
-          <el-tag type="primary" v-else-if="scope.row.appType === '3'">支付</el-tag>
-          <el-tag type="primary" v-else-if="scope.row.appType === '4'">资金冻结</el-tag>
-          <el-tag type="primary" v-else-if="scope.row.appType === '5'">资金解冻</el-tag>
-          <el-tag type="primary" v-else-if="scope.row.appType === '6'">入金同步</el-tag>
-          <el-tag type="primary" v-else-if="scope.row.appType === '7'">出金同步</el-tag>
-          <el-tag type="primary" v-else-if="scope.row.appType === '8'">结息</el-tag>
-          <el-tag type="primary" v-else-if="scope.row.appType === '9'">991转账入金</el-tag>
-          <span v-else></span>
-        </template>
-      </el-table-column>
-      <el-table-column label="币种" prop="currCode"></el-table-column>
-      <el-table-column label="手续费" prop="feeAmt"></el-table-column>
-      <el-table-column label="客户自付手续费" prop="custPayFee"></el-table-column>
-      <el-table-column label="商户代付手续费" prop="merchantPayFee"></el-table-column>
-      <el-table-column label="错误码" prop="msgId"></el-table-column>
-      <el-table-column label="错误信息" prop="msg"></el-table-column>
-      <el-table-column label="交易日期" prop="tranDate"></el-table-column>
-      <el-table-column label="商户流水号" prop="merchantSeqId"></el-table-column>
-      <el-table-column label="交易状态" prop="tranStat"></el-table-column>
-      <el-table-column label="处理状态" prop="sysStat"></el-table-column>
-      <el-table-column label="子账户余额" prop="subAccountMoney"></el-table-column>
-      <el-table-column label="系统流水号" prop="transCodeId"></el-table-column>
-      <el-table-column label="交易时间" prop="tradeTimes"></el-table-column>
-      <el-table-column label="交易摘要" prop="busiSummary"></el-table-column>
-      <el-table-column label="备注1" prop="remark1"></el-table-column>
-      <el-table-column label="备注2" prop="remark2"></el-table-column>
-      <el-table-column label="备注3" prop="remark3"></el-table-column>
-      <el-table-column label="备注4" prop="remark4"></el-table-column>
-      <el-table-column label="备注5" prop="remark5"></el-table-column>
+      <el-table-column label="总笔数" prop="recordNum"></el-table-column>
+      <el-table-column width="150px" label="备注1" prop="remark1"></el-table-column>
+      <el-table-column width="130px" label="备注2" prop="remark2"></el-table-column>
+      <el-table-column label="回执文件名" prop="resultFileName"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -257,7 +216,7 @@ export default {
   methods: {
     queryflowings(formName) {
       const _this = this;
-      _this.flowingdata = [];
+      _this.historydata = [];
       _this.$refs[formName].validate(valid => {
         if (valid) {
           _this.queryparam = {
@@ -268,12 +227,10 @@ export default {
             maxAmt: _this.historytrade.maxAmt,
             tradeCurrency: _this.historytrade.tradeCurrency,
             accountType: _this.historytrade.accountType,
-            payPayeeSign: _this.historytrade.PayPayeeSign
+            payPayeeSign: _this.historytrade.payPayeeSign
           };
-          // console.log(JSON.stringify(_this.queryparam));
           historytrade(_this.queryparam).then(res => {
-            console.log(res);
-            _this.historydata = res.cycles;
+            _this.historydata.push(res);
           });
         }
       });

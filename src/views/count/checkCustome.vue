@@ -1,8 +1,18 @@
 <template>
   <div>
+    <el-row>
+      <el-form ref="customeform" :model="customeform" :rules="rules" inline>
+        <el-form-item label="摊位号:" prop="BoothNo">
+          <el-input placeholder="摊位号" v-model="customeform.BoothNo" clearable></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="checkform('customeform')">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </el-row>
     <div class="tables">
-      <el-table :data="customedata" stripe border>
-        <el-table-column label="子账号" prop="subAccount" width="130"></el-table-column>
+      <el-table :data="customedata" stripe border style="width: 100%;">
+        <el-table-column label="子账号" prop="subAccount" width="150"></el-table-column>
         <el-table-column label="币种" prop="currency"></el-table-column>
         <el-table-column label="交易会员名称" prop="tradeMemBerName"></el-table-column>
         <el-table-column width="120" label="交易会员代码" prop="memBerCode"></el-table-column>
@@ -56,7 +66,7 @@
             <span v-else></span>
           </template>
         </el-table-column>
-        <el-table-column label="证件代码" prop="papersCode"></el-table-column>
+        <el-table-column label="证件代码" prop="papersCode" width="150px"></el-table-column>
         <el-table-column label="是否需要短信通知">
           <template slot-scope="scope">
             <el-tag type="primary" v-if="scope.row.isMessager === '1'">需要</el-tag>
@@ -65,7 +75,7 @@
           </template>
         </el-table-column>
         <el-table-column label="短信通知手机号码" prop="messagePhone"></el-table-column>
-        <el-table-column label="Email" prop="email"></el-table-column>
+        <el-table-column label="Email" prop="email" width="180px"></el-table-column>
         <el-table-column label="结算账号" prop="settleAccount"></el-table-column>
         <el-table-column label="结算账号户名" prop="settleAccountBank"></el-table-column>
         <el-table-column label="支付系统行号" prop="payBank"></el-table-column>
@@ -124,50 +134,42 @@
 <script>
 import { checkcustome } from "@/api/table/subcounttable";
 import cookie from "js-cookie";
-
+// merchantNo: rows.merchantNo,
+// papersCode: rows.papersCode
 export default {
-  props: {
-    customeinfo: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
-  },
+  // props: {
+  //   customeinfo: {
+  //     type: Object,
+  //     default: () => {
+  //       return {};
+  //     }
+  //   }
+  // },
   data() {
     return {
       customedata: [],
-      custome: {
-        BoothNo: ""
+      rules: {
+        BoothNo: [{ required: true, message: "请输入摊位号", trigger: "blur" }]
+      },
+      customeform: {
+        BoothNo: "354554197508237415"
       },
       token: cookie.get("token")
     };
   },
-  watch: {
-    customeinfo(news, old) {
-      this.initable();
-    }
-  },
-  mounted() {
-    this.initable();
-  },
   methods: {
-    initable() {
+    // 查询
+    checkform(formName) {
       const _this = this;
       _this.customedata = []; // 初始化
       const ls = {
-        merchantNo: _this.customeinfo.merchantNo || "",
-        boothNo:
-          _this.customeinfo.merchantNo + _this.customeinfo.papersCode || ""
+        merchantNo: window.merchantNo || "",
+        boothNo: window.merchantNo + _this.customeform.BoothNo || ""
       };
       checkcustome(ls).then(res => {
         console.log(res);
         _this.customedata.push(res);
       });
-    },
-    // 查询
-    checkform(formName) {
-      console.log(JSON.stringify(this.subcount));
     },
     // 重置
     resetform(formName) {
