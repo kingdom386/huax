@@ -69,6 +69,33 @@ export function checkinterestsettled(data) {
   })
 }
 
+// 商户本行出金审核结果查询
+export function queryDeposit(data) {
+  return fetch({
+    url: "/merchant/103030",
+    method: "post",
+    data
+  })
+}
+
+// 991转账入金电子账户查询
+export function queryElectronic(data) {
+  return fetch({
+    url: "/merchant/103120",
+    method: "post",
+    data
+  })
+}
+
+// 991转账入金待入账信息查询
+export function queryCash(data) {
+  return fetch({
+    url: "/merchant/103130",
+    method: "post",
+    data
+  })
+}
+
 // 账户余额查询
 export function checkbalance(data) {
   return fetch({

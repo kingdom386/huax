@@ -1,29 +1,23 @@
 <template>
   <div class="golden">
-    <el-form ref="golden" :model="golden" :inline="true" label-width="120px">
-      <el-row>
-        <el-col :span="7">
-          <el-form-item label="子账号:" prop="SubAccount">
-            <el-input placeholder="子账号" clearable v-model="golden.SubAccount"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-form-item label="原出金支付单号:" prop="OldOutComePayCode">
-            <el-input placeholder="原出金支付单号" clearable v-model="golden.OldOutComePayCode"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-form-item label="备注1:" prop="Remark1">
-            <el-date-picker v-model="golden.Remark1" type="date" placeholder="选择日期"></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :offset="1" :span="4">
-          <el-form-item>
-            <el-button type="primary" @click="checkform('golden')">查询</el-button>
-            <el-button type="danger" @click="resetform('golden')">重置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+    <el-form ref="golden" :model="golden" inline label-width="120px">
+      <el-form-item label="子账号:" prop="subAccount">
+        <el-input placeholder="子账号" clearable v-model="golden.subAccount"></el-input>
+      </el-form-item>
+      <el-form-item label="原出金支付单号:" prop="oldOutComePayCode">
+        <el-input placeholder="原出金支付单号" clearable v-model="golden.oldOutComePayCode"></el-input>
+      </el-form-item>
+      <el-form-item label="备注1:" prop="remark1">
+        <el-date-picker
+          value-format="yyyyMMdd"
+          v-model="golden.remark1"
+          type="date"
+          placeholder="选择日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="initdom">查询</el-button>
+      </el-form-item>
     </el-form>
     <div class="tables">
       <el-table :data="tabledata" stripe border style="width: 100%">
@@ -130,7 +124,7 @@
 </template>
 
 <script>
-import { customelist } from "@/api/table/subcounttable";
+import { queryDeposit } from "@/api/table/subcounttable";
 import cookie from "js-cookie";
 
 export default {
@@ -138,8 +132,9 @@ export default {
     return {
       tabledata: [],
       golden: {
-        SubAccount: "",
-        OldOutComePayCode: ""
+        subAccount: "201907081640352362",
+        oldOutComePayCode: "",
+        remark1: ""
       },
       page: {
         currentPage: 1,
@@ -149,36 +144,20 @@ export default {
       token: cookie.get("token")
     };
   },
-  created() {
-    const _this = this;
-    customelist().then(res => {
-      if (res.code === 0) {
-        _this.tabledata = res.list;
-        _this.page.total = res.total;
-      }
-    });
-  },
   methods: {
-    // 查询
-    checkform(formName) {
-      console.log(JSON.stringify(this.subcount));
-    },
-    // 重置
-    resetform(formName) {
-      this.$refs[formName].resetFields();
-    },
-    deleteRow(index, rows) {
+    initdom() {
       const _this = this;
-      _this
-        .$confirm("确认删除这条数据么？", "提示", { type: "warning" })
-        .then(() => {
-          _this.$message({ message: "删除成功！", type: "success" });
-          rows.splice(index, 1);
-        })
-        .catch(errro => {
-          _this.$message({ message: "删除失败，用户已取消！", type: "info" });
-        });
+      const ls = {
+        merchantNo: window.merchantNo,
+        subAccount: _this.golden.subAccount,
+        oldOutComePayCode: _this.golden.oldOutComePayCode,
+        remark1: _this.golden.remark1
+      };
+      queryDeposit(ls).then(res => {
+        console.log(res);
+      });
     },
+    // 查询
     handleSizeChange(val) {
       this.page.pagesize = val;
     },
