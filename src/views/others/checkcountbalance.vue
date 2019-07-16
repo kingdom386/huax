@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form inline ref="countbalance" :model="countbalance" :rules="rules">
-      <el-form-item label="账户类别:">
+      <el-form-item label="账户类别:" prop="accountType">
         <el-select v-model="countbalance.accountType">
           <el-option label="子账户" value="1"></el-option>
           <el-option label="实体账户" value="2"></el-option>
@@ -40,7 +40,11 @@ export default {
         memBerCode: "",
         accountType: "3"
       },
-      rules: {}
+      rules: {
+        accountType: [
+          {required: true, message: "请选择账户类别！", trigger: 'change'}
+        ]
+      }
     };
   },
   methods: {

@@ -16,7 +16,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="checkRow">查询</el-button>
+        <el-button type="primary" @click="checkRow('bindmoney')">查询</el-button>
       </el-form-item>
     </el-form>
     <div class="tables">
@@ -89,36 +89,37 @@ export default {
       },
       rules: {
         subAccount: [
-          {required: true, message: "请输入子账号！", trigger: "blur"}
+          { required: true, message: "请输入子账号！", trigger: "blur" }
         ],
         tradeMemCode: [
-          {required: true, message: "请输入交易会员代码！", trigger: "blur"}
+          { required: true, message: "请输入交易会员代码！", trigger: "blur" }
         ],
         outComeAccountType: [
-          {required: true, message: "请选择出入金账户类别！", trigger: "change"}
+          {
+            required: true,
+            message: "请选择出入金账户类别！",
+            trigger: "change"
+          }
         ]
       }
     };
   },
   methods: {
-    // 查询
-    checkform(formName) {
-      console.log(JSON.stringify(this.subcount));
-    },
-    // 重置
-    resetform(formName) {
-      this.$refs[formName].resetFields();
-    },
-    checkRow() {
+    checkRow(formName) {
       const _this = this;
       const ls = {
         merchantNo: window.merchantNo,
         subAccount: _this.bindmoney.subAccount,
         tradeMemCode: _this.bindmoney.tradeMemCode,
         outComeAccountType: _this.bindmoney.outComeAccountType
-      }
-      checkbindmoney(ls).then(res => {
-        _this.binddata = res.cycles || [];
+      };
+      _this.$refs[formName].validate(valid => {
+        console.log(valid);
+        if (valid) {
+          checkbindmoney(ls).then(res => {
+            _this.binddata = res.cycles || [];
+          });
+        }
       });
     }
   }

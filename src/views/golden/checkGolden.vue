@@ -1,6 +1,6 @@
 <template>
   <div class="golden">
-    <el-form ref="golden" :model="golden" inline label-width="120px">
+    <el-form ref="golden" :model="golden" inline :rules="rules" label-width="130px">
       <el-form-item label="子账号:" prop="subAccount">
         <el-input placeholder="子账号" clearable v-model="golden.subAccount"></el-input>
       </el-form-item>
@@ -16,7 +16,7 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="initdom">查询</el-button>
+        <el-button type="primary" @click="initdom('golden')">查询</el-button>
       </el-form-item>
     </el-form>
     <div class="tables">
@@ -113,7 +113,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="page.currentPage"
-        :page-sizes="[10, 20, 50, 100]"
+        :page-sizes="[25, 50, 75, 100]"
         :page-size="page.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="page.total"
@@ -131,6 +131,15 @@ export default {
   data() {
     return {
       tabledata: [],
+      rules: {
+        subAccount: [
+          { required: true, message: "请输入子账号！", trigger: "blur" }
+        ],
+        oldOutComePayCode: [
+          { required: true, message: "原出金支付单号!", trigger: "blur" }
+        ],
+        remark1: [{ required: true, message: "请选择日期!", trigger: "change" }]
+      },
       golden: {
         subAccount: "201907081640352362",
         oldOutComePayCode: "",
@@ -138,14 +147,14 @@ export default {
       },
       page: {
         currentPage: 1,
-        pagesize: 20,
+        pagesize: 25,
         total: 0
       },
       token: cookie.get("token")
     };
   },
   methods: {
-    initdom() {
+    initdom(formName) {
       const _this = this;
       const ls = {
         merchantNo: window.merchantNo,
@@ -153,8 +162,12 @@ export default {
         oldOutComePayCode: _this.golden.oldOutComePayCode,
         remark1: _this.golden.remark1
       };
-      queryDeposit(ls).then(res => {
-        console.log(res);
+      _this.$refs[formName].validate(valid => {
+        if (valid) {
+          queryDeposit(ls).then(res => {
+            console.log(res);
+          });
+        }
       });
     },
     // 查询

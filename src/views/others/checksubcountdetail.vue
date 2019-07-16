@@ -2,7 +2,13 @@
   <div>
     <el-form inline ref="countdetail" :model="countdetail" :rules="rules">
       <el-form-item label="交易会员代码:">
-        <el-input placeholder="交易会员代码" v-model="countdetail.tradeMemCode"></el-input>
+        <el-input placeholder="交易会员代码" clearable v-model="countdetail.tradeMemCode"></el-input>
+      </el-form-item>
+      <el-form-item label="开始时间:">
+        <el-date-picker type="datetime" clearable value-format="yyyyMMddHHmm" v-model="countdetail.startTimes"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="终止时间:">
+        <el-date-picker type="datetime" clearable value-format="yyyyMMddHHmm" v-model="countdetail.endTimes"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="init">查询</el-button>
@@ -25,12 +31,23 @@
       <el-table-column prop="transCodeId" label="交易流水号"></el-table-column>
       <el-table-column prop="tradeTimes" label="交易时间"></el-table-column>
     </el-table>
+    <div style="clear: both;margin-top: 20px;text-align: right">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page.currentPage"
+        :page-sizes="[25, 50, 75, 100]"
+        :page-size="page.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      ></el-pagination>
+    </div>
+    <!-- clearfix -->
   </div>
 </template>
 
 <script>
 import { checktradedetail } from "@/api/table/subcounttable";
-import { thirtyday } from '@/utils/validate'
 
 export default {
   data() {
@@ -39,32 +56,36 @@ export default {
       tradedata: [],
       rules: {},
       countdetail: {
-        tradeMemCode: "0000501763"
+        tradeMemCode: "0000501763",
+        startTimes: "",
+        endTimes: ""
+      },
+      page: {
+        currentPage: 1,
+        pagesize: 25,
+        total: 0
       }
     };
   },
-  // watch: {
-  //   tradeinfo(news, old) {
-  //     this.init(news);
-  //   }
-  // },
-  // mounted() {
-  //   this.init(this.tradeinfo);
-  // },
   methods: {
     init() {
       const _this = this;
       _this.tradedata = [];
-      const date = new Date();
       const ls = {
         merchantNo: window.merchantNo,
         tradeMemCode: _this.countdetail.tradeMemCode,
-        startTimes: this.$moment(thirtyday()).format("YYYYMMDDHHss"),
-        endTimes: this.$moment(date).format("YYYYMMDDHHss")
+        startTimes: _this.countdetail.startTimes,
+        endTimes: _this.countdetail.endTimes
       }
       checktradedetail(ls).then(res => {
         _this.tradedata = res.cycles;
       });
+    },
+    handleSizeChange(val) {
+      this.page.pagesize = val;
+    },
+    handleCurrentChange(val) {
+      this.page.currentPage = val;
     }
   }
 };

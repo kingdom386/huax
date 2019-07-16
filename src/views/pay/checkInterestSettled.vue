@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form ref="settled" :model="settled" :inline="true" label-width="120px">
+    <el-form ref="settled" :model="settled" :inline="true" :rules="rules" label-width="120px">
       <el-row>
         <el-col :span="7">
           <el-form-item label="批量结息流水号:" prop="batchAccintPayCode">
@@ -57,6 +57,11 @@ export default {
       settled: {
         batchAccintPayCode: ""
       },
+      rules: {
+        batchAccintPayCode: [
+          { required: true, message: "请输入批量结息流水号！", trigger: "blur" }
+        ]
+      },
       page: {
         currentPage: 1,
         pagesize: 20,
@@ -71,7 +76,7 @@ export default {
       const ls = {
         merchantNo: window.merchantNo,
         batchAccintPayCode: this.settled.batchAccintPayCode
-      }
+      };
       checkinterestsettled(ls).then(res => {
         console.log(res);
         // _this.tabledata = res || []

@@ -149,8 +149,12 @@ export default {
         merchantNo: window.merchantNo || "",
         boothNo: window.merchantNo + _this.customeform.BoothNo || ""
       };
-      checkcustome(ls).then(res => {
-        _this.customedata.push(res);
+      _this.$refs[formName].validate(valid => {
+        if (valid) {
+          checkcustome(ls).then(res => {
+            _this.customedata.push(res);
+          });
+        }
       });
     },
     // 重置

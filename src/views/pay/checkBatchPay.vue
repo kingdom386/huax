@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form ref="batchpay" :model="batchpay" :inline="true" label-width="120px">
+    <el-form ref="batchpay" :model="batchpay" :inline="true" :rules="rules" label-width="130px">
       <el-row>
         <el-col :span="7">
           <el-form-item label="批量支付流水号:" prop="batchPayCode">
@@ -9,7 +9,7 @@
         </el-col>
         <el-col :span="6">
           <el-form-item>
-            <el-button type="primary" @click="initdom">查询</el-button>
+            <el-button type="primary" @click="initdom('batchpay')">查询</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -36,7 +36,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="page.currentPage"
-        :page-sizes="[20, 40, 60, 100]"
+        :page-sizes="[25, 50, 75, 100]"
         :page-size="page.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="page.total"
@@ -54,40 +54,37 @@ export default {
   data() {
     return {
       tabledata: [],
+      rules: {
+        batchPayCode: [
+          { required: true, message: "请输入批量支付流水号！", trigger: "blur" }
+        ]
+      },
       batchpay: {
         batchPayCode: ""
       },
       page: {
         currentPage: 1,
-        pagesize: 20,
+        pagesize: 25,
         total: 0
       },
       token: cookie.get("token")
     };
   },
   methods: {
-    initdom() {
-      // const _this = this;
+    initdom(formName) {
+      const _this = this;
       const ls = {
         merchantNo: window.merchantNo,
         batchPayCode: this.batchpay.batchPayCode
       };
-      checkbatchpay(ls).then(res => {
-        console.log(res);
-        // _this.tabledata = res || [];
+      _this.$refs[formName].validate(valid => {
+        if (valid) {
+          checkbatchpay(ls).then(res => {
+            console.log(res);
+            // _this.tabledata = res || [];
+          });
+        }
       });
-    },
-    deleteRow(index, rows) {
-      const _this = this;
-      _this
-        .$confirm("确认删除这条数据么？", "提示", { type: "warning" })
-        .then(() => {
-          _this.$message({ message: "删除成功！", type: "success" });
-          rows.splice(index, 1);
-        })
-        .catch(errro => {
-          _this.$message({ message: "删除失败，用户已取消！", type: "info" });
-        });
     },
     handleSizeChange(val) {
       this.page.pagesize = val;

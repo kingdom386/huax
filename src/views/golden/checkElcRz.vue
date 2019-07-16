@@ -1,6 +1,6 @@
 <template>
   <div class="golden">
-    <el-form ref="elcrz" :model="elcrz" inline label-width="100px">
+    <el-form ref="elcrz" :model="elcrz" :rules="rules" inline label-width="120px">
       <el-row>
         <el-col :span="7">
           <el-form-item label="交易会员代码:" prop="tradeMemCode">
@@ -59,6 +59,20 @@ import cookie from "js-cookie";
 export default {
   data() {
     return {
+      rules: {
+        tradeMemCode: [
+          {required: true, message: "请输入交易会员代码！", trigger: "blur"}
+        ],
+        tradeMemBerName: [
+          {required: true, message: "请输入交易会员名称!", trigger: "blur"}
+        ],
+        subAccount: [
+          {required: true, message: "请输入子账号!", trigger: "blur"}
+        ],
+        currency: [
+          {required: true, message: "请选择币种标识!", trigger: "change"}
+        ]
+      },
       tabledata: [],
       options: [
         {
@@ -111,15 +125,10 @@ export default {
         }
       ],
       elcrz: {
-        tradeMemCode: "",
-        tradeMemBerName: "",
-        subAccount: "",
+        tradeMemCode: "0000501763",
+        tradeMemBerName: "shanghu2",
+        subAccount: "201907081640352362",
         currency: "CNY"
-      },
-      page: {
-        currentPage: 1,
-        pagesize: 20,
-        total: 0
       },
       token: cookie.get("token")
     };
@@ -127,6 +136,7 @@ export default {
   methods: {
     initdom() {
       const _this = this;
+      _this.tabledata = []
       const ls = {
         merchantNo: window.merchantNo,
         tradeMemCode: _this.elcrz.tradeMemCode,
@@ -135,7 +145,7 @@ export default {
         currency: _this.elcrz.currency
       };
       queryElectronic(ls).then(res => {
-        console.log(res);
+        _this.tabledata.push(res);
       });
     }
   }

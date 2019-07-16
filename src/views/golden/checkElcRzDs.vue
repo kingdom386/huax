@@ -1,6 +1,6 @@
 <template>
   <div class="golden">
-    <el-form ref="elcrzds" :model="elcrzds" inline label-width="120px">
+    <el-form ref="elcrzds" :model="elcrzds" inline :rules="rules" label-width="120px">
       <el-form-item label="交易会员代码:" prop="tradeMemCode">
         <el-input placeholder="交易会员代码" clearable v-model="elcrzds.tradeMemCode"></el-input>
       </el-form-item>
@@ -18,7 +18,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="initdom">查询</el-button>
+        <el-button type="primary" @click="initdom('elcrzds')">查询</el-button>
       </el-form-item>
     </el-form>
     <div class="tables">
@@ -36,7 +36,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="page.currentPage"
-        :page-sizes="[10, 20, 50, 100]"
+        :page-sizes="[25, 50, 75, 100]"
         :page-size="page.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="page.total"
@@ -53,6 +53,17 @@ import cookie from "js-cookie";
 export default {
   data() {
     return {
+      rules: {
+        tradeMemCode: [
+          { required: true, message: "请输入交易会员代码！", trigger: "blur" }
+        ],
+        subAccount: [
+          { required: true, message: "请输入子账号！", trigger: "blur" }
+        ],
+        currency: [
+          { required: true, message: "请选择币种！", trigger: "change" }
+        ]
+      },
       tabledata: [],
       options: [
         {
@@ -105,20 +116,20 @@ export default {
         }
       ],
       elcrzds: {
-        tradeMemCode: "",
-        subAccount: "",
-        currency: ""
+        tradeMemCode: "0000501763",
+        subAccount: "201907081640352362",
+        currency: "CNY"
       },
       page: {
         currentPage: 1,
-        pagesize: 20,
+        pagesize: 25,
         total: 0
       },
       token: cookie.get("token")
     };
   },
   methods: {
-    initdom() {
+    initdom(formName) {
       const _this = this;
       const ls = {
         merchantNo: window.merchantNo,
@@ -126,8 +137,12 @@ export default {
         subAccount: _this.elcrzds.subAccount,
         currency: _this.elcrzds.currency
       };
-      queryCash(ls).then(res => {
-        console.log(res);
+      _this.$refs[formName].validate(valid => {
+        if (valid) {
+          queryCash(ls).then(res => {
+            _this.tabledata.push(res);
+          });
+        }
       });
     },
     handleSizeChange(val) {

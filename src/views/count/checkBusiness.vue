@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form ref="bussiness" :model="bussiness" :inline="true" label-width="80px">
+    <el-form ref="bussiness" :model="bussiness" :rules="rules" :inline="true" label-width="80px">
       <el-row>
         <el-col :span="6">
           <el-form-item label="币种:" prop="currency">
@@ -22,7 +22,7 @@
       </el-row>
     </el-form>
     <div class="tables">
-      <el-table :data="businessdata" stripe border style="width: 100%">
+      <el-table :data="businessdata" stripe border style="width: 100%" height="500">
         <el-table-column label="商户代码" prop="merchantNo" width="100px"></el-table-column>
         <el-table-column label="企业性质" prop="companyProperty"></el-table-column>
         <el-table-column label="经营范围" prop="creadScope"></el-table-column>
@@ -172,7 +172,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="page.currentPage"
-        :page-sizes="[10, 20, 50, 100]"
+        :page-sizes="[25, 50, 75, 100]"
         :page-size="page.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="page.total"
@@ -243,29 +243,42 @@ export default {
       bussiness: {
         currency: "CNY"
       },
+      rules: {
+        currency: [
+          { required: true, message: "请选择币种!", trigger: "change" }
+        ]
+      },
       page: {
         currentPage: 1,
-        pagesize: 20,
+        pagesize: 25,
         total: 0
       },
       token: cookie.get("token")
     };
   },
   created() {
-    this.initdom()
+    this.initdom();
   },
   methods: {
     initdom() {
       const _this = this;
-      _this.businessdata = []
-      const ls = { merchantNo: window.merchantNo, currency: _this.bussiness.currency };
+      _this.businessdata = [];
+      const ls = {
+        merchantNo: window.merchantNo,
+        currency: _this.bussiness.currency
+      };
       checkbusiness(ls).then(res => {
         _this.businessdata.push(res);
       });
     },
     // 查询
     checkform(formName) {
-      this.initdom()
+      const _this = this;
+      _this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.initdom();
+        }
+      });
     },
     // 重置
     resetform(formName) {
